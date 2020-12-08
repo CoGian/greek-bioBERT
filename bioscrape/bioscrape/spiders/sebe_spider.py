@@ -16,7 +16,6 @@ class MednetSpider(scrapy.Spider):
 
 		for href in issues_hrefs:
 			yield scrapy.Request(href, callback=self.parse_issues)
-			break
 
 	def parse_issues(self, response):
 		abstract_hrefs = response.css('.mpcth-read-more').xpath('@href').extract()
