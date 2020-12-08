@@ -4,7 +4,8 @@ import string
 
 class MednetSpider(scrapy.Spider):
 	name = "sebe"
-	start_urls = ["http://www.sebe.gr/%cf%80%ce%b5%cf%81%ce%b9%ce%bf%ce%b4%ce%b9%ce%ba%ce%bf-%cf%83%cf%84%ce%bf%ce%bc%ce%b1/%cf%84%ce%b5%cf%85%cf%87%ce%b7-%cf%80%ce%b5%cf%81%ce%b9%ce%bf%ce%b4%ce%b9%ce%ba%ce%bf%cf%85/"]
+	start_urls = [
+		"http://www.sebe.gr/%cf%80%ce%b5%cf%81%ce%b9%ce%bf%ce%b4%ce%b9%ce%ba%ce%bf-%cf%83%cf%84%ce%bf%ce%bc%ce%b1/%cf%84%ce%b5%cf%85%cf%87%ce%b7-%cf%80%ce%b5%cf%81%ce%b9%ce%bf%ce%b4%ce%b9%ce%ba%ce%bf%cf%85/"]
 
 	def parse(self, response, **kwargs):
 
@@ -24,28 +25,36 @@ class MednetSpider(scrapy.Spider):
 			yield scrapy.Request(href, callback=self.parse_abstracts)
 
 	def parse_abstracts(self, response):
-		#TO-DO PARSING OF ABSTRACTS
-		pass
-		# title = response.css('span.HeadTitle::text').getall()
-		# abstract = response.css('p.AbsText::text').getall()
-		# labels = response.css('span.AbsText::text').getall()
-		#
-		# title = " ".join(title)
-		# abstract = " ".join(abstract)
-		# labels = " ".join(labels)
-		#
-		# title = title.replace("\r", " ")
-		# title = title.replace("\n", " ")
-		#
-		# abstract = abstract.replace("\r", " ")
-		# abstract = abstract.replace("\n", " ")
-		#
-		# labels = labels.replace("\r", " ")
-		# labels = labels.replace("\n", " ")
-		#
-		# if labels[0] in string.printable:
-		# 	yield {
-		# 		'title': title,
-		# 		'abstract': abstract,
-		# 		'labels': labels
-		# 	}
+		title = response.css('span.mpcth-color-main-border::text').getall()
+
+		title = [item for item in title if '\t' in item]
+		p_list = response.css('p::text').getall()
+
+		abstract = p_list[:-1]
+		labels = p_list[-1]
+
+		title = " ".join(title)
+		abstract = " ".join(abstract)
+
+		title = title.replace("\r", " ")
+		title = title.replace("\n", " ")
+		title = title.replace("\t", "")
+		title = title.replace("\xad", "")
+		title = title.replace("\xa0", "")
+
+		abstract = abstract.replace("\r", " ")
+		abstract = abstract.replace("\n", " ")
+		abstract = abstract.replace("\xad", "")
+		abstract = abstract.replace("\xa0", "")
+
+		labels = labels.replace("\r", " ")
+		labels = labels.replace("\n", " ")
+		labels = labels.replace("\xad", "")
+		labels = labels.replace("\xa0", "")
+
+		if labels[0] in string.printable:
+			yield {
+				'title': title,
+				'abstract': abstract,
+				'labels': labels
+			}
