@@ -30,7 +30,7 @@ class MednetSpider(scrapy.Spider):
 	def parse_abstracts(self, response):
 		title = response.css('span.HeadTitle::text').getall()
 		abstract = response.css('p.AbsText::text').getall()
-		labels = response.css('span.AbsText::text').getall()
+		keywords = response.css('span.AbsText::text').getall()
 
 		if len(title) == 0:
 			title = response.css('font.HeadTitle::text').getall()
@@ -39,13 +39,13 @@ class MednetSpider(scrapy.Spider):
 			title = response.css('p.HeadTitle::text').getall()
 
 		if len(abstract) == 0 or len(abstract[0].split()) < 10:
-			if len(labels) >= 2 :
-				abstract = labels[0:-1]
-				labels = labels[-1:]
+			if len(keywords) >= 2 :
+				abstract = keywords[0:-1]
+				keywords = keywords[-1:]
 
 		title = " ".join(title)
 		abstract = " ".join(abstract)
-		labels = " ".join(labels)
+		keywords = " ".join(keywords)
 
 		title = title.replace("\r", " ")
 		title = title.replace("\n", " ")
@@ -53,12 +53,14 @@ class MednetSpider(scrapy.Spider):
 		abstract = abstract.replace("\r", " ")
 		abstract = abstract.replace("\n", " ")
 
-		labels = labels.replace("\r", " ")
-		labels = labels.replace("\n", " ")
+		keywords = keywords.replace("\r", " ")
+		keywords = keywords.replace("\n", " ")
 
-		if "�" not in abstract and "�" not in title and "�" not in labels:
-			yield {
-				'title': title,
-				'abstract': abstract,
-				'labels': labels
-			}
+		if "�" not in abstract and "�" not in title and "�" not in keywords:
+
+			if abstract != '' and keywords != '':
+				yield {
+					'title': title,
+					'abstract': abstract,
+					'keywords': keywords
+				}
