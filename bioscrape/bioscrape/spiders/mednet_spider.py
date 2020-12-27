@@ -43,7 +43,6 @@ class MednetSpider(scrapy.Spider):
 				abstract = labels[0:-1]
 				labels = labels[-1:]
 
-
 		title = " ".join(title)
 		abstract = " ".join(abstract)
 		labels = " ".join(labels)
@@ -57,7 +56,7 @@ class MednetSpider(scrapy.Spider):
 		labels = labels.replace("\r", " ")
 		labels = labels.replace("\n", " ")
 
-		if "�" not in abstract and "�" not in title and "�" not in title:
+		if "�" not in abstract and "�" not in title and "�" not in labels:
 			yield {
 				'title': title,
 				'abstract': abstract,
