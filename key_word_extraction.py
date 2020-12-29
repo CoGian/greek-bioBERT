@@ -10,7 +10,7 @@ import json
 def load_model(model_name):
     model = TFBertModel.from_pretrained(model_name)
     tokenizer = BertTokenizer.from_pretrained(model_name)
-    print(model.summary)
+    print(model.summary())
     return model, tokenizer
 
 
@@ -32,10 +32,10 @@ def produce_embeddings(model, tokenizer, text, isDoc):
 
 def prepare_stopwords_list():
     stop_words = nltk.corpus.stopwords.words('greek')
-    with open("stopwords-el.json", "r", encoding="utf-8") as fin:
-        stop_words2 = json.load(fin)
-
-    stop_words.extend(stop_words2)
+    # with open("stopwords-el.json", "r", encoding="utf-8") as fin:
+    #     stop_words2 = json.load(fin)
+    #
+    # stop_words.extend(stop_words2)
     stop_words = [strip_accents_and_lowercase(stop_word) for stop_word in stop_words]
     stop_words = set(stop_words)
 
