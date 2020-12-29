@@ -14,7 +14,7 @@ def load_model(model_name):
     return model, tokenizer
 
 
-def produce_embeddings(model, tokenizer, text):
+def produce_embeddings(model, tokenizer, text, isDoc):
     input_ids = tokenizer.encode(text,
                                  return_tensors="tf",
                                  pad_to_max_length=True,
@@ -22,7 +22,11 @@ def produce_embeddings(model, tokenizer, text):
                                  truncation=True)
     outputs = model(input_ids).last_hidden_state
     # doc_embedding = tf.reshape(tf.nn.softmax(outputs, axis=1).numpy()[0], -1).numpy()
-    text_embedding = tf.reshape(tf.nn.softmax(outputs, axis=1).numpy()[0], -1).numpy().reshape(1, -1)
+    if isDoc:
+        text_embedding = tf.reshape(tf.nn.softmax(outputs, axis=1).numpy()[0], -1).numpy().reshape(1, -1)
+    else:
+        text_embedding = tf.reshape(tf.nn.softmax(outputs, axis=1).numpy()[0], -1).numpy()
+
     return text_embedding
 
 
@@ -60,9 +64,9 @@ def extract_keywords(doc):
     candidates = produce_candidates(doc, (2, 3), stop_words)
 
     model, tokenizer = load_model("greekBERT")
-    doc_embedding = produce_embeddings(model, tokenizer, doc)
+    doc_embedding = produce_embeddings(model, tokenizer, doc, True)
 
-    candidate_embeddings = [produce_embeddings(model, tokenizer, candidate) for candidate in candidates]
+    candidate_embeddings = [produce_embeddings(model, tokenizer, candidate, False) for candidate in candidates]
 
     top_n = 10
     similarities = cosine_similarity(doc_embedding, candidate_embeddings)
