@@ -32,10 +32,10 @@ def produce_embeddings(model, tokenizer, text, isDoc):
 
 def prepare_stopwords_list():
     stop_words = nltk.corpus.stopwords.words('greek')
-    # with open("stopwords-el.json", "r", encoding="utf-8") as fin:
-    #     stop_words2 = json.load(fin)
-    #
-    # stop_words.extend(stop_words2)
+    with open("stopwords-el.json", "r", encoding="utf-8") as fin:
+        stop_words2 = json.load(fin)
+
+    stop_words.extend(stop_words2)
     stop_words = [strip_accents_and_lowercase(stop_word) for stop_word in stop_words]
     stop_words = set(stop_words)
 
@@ -60,7 +60,7 @@ def produce_candidates(doc, n_gram_range, stop_words):
 def extract_keywords(doc):
     nltk.download('stopwords')
 
-    stop_words = prepare_stopwords_list()
+    stop_words = []
     candidates = produce_candidates(doc, (3, 3), stop_words)
 
     model, tokenizer = load_model("greekBERT")
