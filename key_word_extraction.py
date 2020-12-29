@@ -17,7 +17,7 @@ def load_model(model_name):
 def produce_embeddings(model, tokenizer, text, isDoc):
     input_ids = tokenizer.encode(text,
                                  return_tensors="tf",
-                                 padding=512,
+                                 padding="max_length",
                                  max_length=512,
                                  truncation=True)
     outputs = model(input_ids).last_hidden_state
