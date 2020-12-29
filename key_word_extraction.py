@@ -17,7 +17,7 @@ def load_model(model_name):
 def produce_embeddings(model, tokenizer, text, isDoc):
     input_ids = tokenizer.encode(text,
                                  return_tensors="tf",
-                                 pad_to_max_length=True,
+                                 padding=512,
                                  max_length=512,
                                  truncation=True)
     outputs = model(input_ids).last_hidden_state
@@ -61,7 +61,7 @@ def extract_keywords(doc):
     nltk.download('stopwords')
 
     stop_words = prepare_stopwords_list()
-    candidates = produce_candidates(doc, (2, 3), stop_words)
+    candidates = produce_candidates(doc, (3, 3), stop_words)
 
     model, tokenizer = load_model("greekBERT")
     doc_embedding = produce_embeddings(model, tokenizer, doc, True)
