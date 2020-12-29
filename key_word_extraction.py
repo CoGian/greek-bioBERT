@@ -10,7 +10,7 @@ import json
 def load_model(model_name):
     model = TFBertModel.from_pretrained(model_name)
     tokenizer = BertTokenizer.from_pretrained(model_name)
-    print(model.summary())
+    # print(model.summary())
     return model, tokenizer
 
 
@@ -70,7 +70,7 @@ def extract_keywords(doc):
 
     top_n = 10
     similarities = cosine_similarity(doc_embedding, candidate_embeddings)
-    keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
+    keywords = [candidates[index] for index in similarities.argsort()[0][top_n:]]
     print(keywords)
 
 
