@@ -48,10 +48,10 @@ def strip_accents_and_lowercase(s):
 
 
 def produce_candidates(doc, n_gram_range, stop_words):
-    # unaccented_doc = strip_accents_and_lowercase(doc)
+    unaccented_doc = strip_accents_and_lowercase(doc)
 
     # Extract candidate words/phrases
-    count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([doc])
+    count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([unaccented_doc])
     candidates = count.get_feature_names()
 
     return candidates
@@ -71,7 +71,8 @@ def extract_keywords(doc):
     top_n = 10
     similarities = cosine_similarity(doc_embedding, candidate_embeddings)
     keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
-    print(keywords)
+    print(keywords.reverse())
+    print(similarities)
     print(similarities.argsort())
     print(candidates)
 
