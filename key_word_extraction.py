@@ -70,7 +70,7 @@ def extract_keywords(doc):
 
     top_n = 10
     similarities = cosine_similarity(doc_embedding, candidate_embeddings)
-    keywords = [candidates[index] for index in similarities.argsort()[0][top_n:]]
+    keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
     print(keywords)
     print(similarities.argsort())
     print(candidates)
