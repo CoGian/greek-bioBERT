@@ -36,7 +36,6 @@ def prepare_stopwords_list():
         stop_words2 = json.load(fin)
 
     stop_words.extend(stop_words2)
-    stop_words = [strip_accents_and_lowercase(stop_word) for stop_word in stop_words]
     stop_words = set(stop_words)
 
     return stop_words
@@ -48,10 +47,10 @@ def strip_accents_and_lowercase(s):
 
 
 def produce_candidates(doc, n_gram_range, stop_words):
-    unaccented_doc = strip_accents_and_lowercase(doc)
+    # unaccented_doc = strip_accents_and_lowercase(doc)
 
     # Extract candidate words/phrases
-    count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([unaccented_doc])
+    count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([doc])
     candidates = count.get_feature_names()
 
     return candidates
@@ -60,21 +59,23 @@ def produce_candidates(doc, n_gram_range, stop_words):
 def extract_keywords(doc):
     nltk.download('stopwords')
 
-    stop_words = prepare_stopwords_list()
-    candidates = produce_candidates(doc, (3, 3), stop_words)
+    stop_words = []
+    candidates = produce_candidates(doc, (3, 4), stop_words)
 
     model, tokenizer = load_model("greekBERT")
     doc_embedding = produce_embeddings(model, tokenizer, doc, True)
 
-    candidate_embeddings = [produce_embeddings(model, tokenizer, candidate, False) for candidate in candidates]
+    candidate_embeddings = []
+    for candidate in candidates:
+        candidate_embeddings.append(produce_embeddings(model, tokenizer, candidate, False))
 
-    top_n = 10
+    top_n = 5
     similarities = cosine_similarity(doc_embedding, candidate_embeddings)
     keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
-    print(keywords.reverse())
+    print(keywords[::-1])
     print(similarities)
-    print(similarities.argsort())
-    print(candidates)
+    # print(similarities.argsort())
+    # print(candidates)
 
 
 if __name__ == '__main__':
