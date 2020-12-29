@@ -48,10 +48,10 @@ def strip_accents_and_lowercase(s):
 
 
 def produce_candidates(doc, n_gram_range, stop_words):
-    unaccented_doc = strip_accents_and_lowercase(doc)
+    # unaccented_doc = strip_accents_and_lowercase(doc)
 
     # Extract candidate words/phrases
-    count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([unaccented_doc])
+    count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([doc])
     candidates = count.get_feature_names()
 
     return candidates
