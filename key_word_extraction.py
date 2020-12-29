@@ -60,7 +60,7 @@ def produce_candidates(doc, n_gram_range, stop_words):
 def extract_keywords(doc):
     nltk.download('stopwords')
 
-    stop_words = []
+    stop_words = prepare_stopwords_list()
     candidates = produce_candidates(doc, (3, 3), stop_words)
 
     model, tokenizer = load_model("greekBERT")
@@ -72,6 +72,8 @@ def extract_keywords(doc):
     similarities = cosine_similarity(doc_embedding, candidate_embeddings)
     keywords = [candidates[index] for index in similarities.argsort()[0][top_n:]]
     print(keywords)
+    print(similarities.argsort())
+    print(candidates)
 
 
 if __name__ == '__main__':
