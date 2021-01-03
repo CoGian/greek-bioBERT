@@ -56,11 +56,13 @@ def main():
         doc = nlp(abstract)
         sentences = list(doc.sents)
         sentences = [str(sent) for sent in sentences]
+        sentences = [sent for sent in sentences if len(sent.split()) > 5]
         sentences_dataset.extend(sentences)
 
     with open('articles_dataset.json', 'w', encoding='utf8') as fout:
         json.dump(articles_dataset, fout, ensure_ascii=False, indent=2)
 
+    print('sentences_dataset size:', len(sentences_dataset))
     with open('sentences_dataset.json', 'w', encoding='utf8') as fout:
         json.dump(sentences_dataset, fout, ensure_ascii=False, indent=2)
 
@@ -68,10 +70,19 @@ def main():
         abstract = process_text(article['abstract'])
         keywords = process_text(article['keywords'])
 
-        test_articles_dataset.append({
-            "abstract": abstract,
-            "keywords": keywords
-        })
+        if "." in keywords:
+            keywords = re.match("(.*?)\.", keywords).group()
+
+        keywords = keywords.split(",")
+        keywords = [keyword.rstrip().lstrip().rstrip('.') for keyword in keywords if 10 > len(keyword.split()) and keyword != ' ']
+
+        if 30 > len(keywords) >= 1:
+            test_articles_dataset.append({
+                "abstract": abstract,
+                "keywords": keywords
+            })
+
+    print('test_articles_dataset size:', len(test_articles_dataset))
     with open('test_articles_dataset.json', 'w', encoding='utf8') as fout:
         json.dump(test_articles_dataset, fout, ensure_ascii=False, indent=2)
 
