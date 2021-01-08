@@ -63,8 +63,8 @@ def produce_candidates(doc, n_gram_range, stop_words):
 
 def extract_keywords(doc, model):
 	stop_words = prepare_stopwords_list()
-	stop_words = [strip_accents_and_lowercase(word) for word in stop_words]
-	doc = strip_accents_and_lowercase(doc)
+	# stop_words = [strip_accents_and_lowercase(word) for word in stop_words]
+	# doc = strip_accents_and_lowercase(doc)
 
 	candidates = produce_candidates(doc, (1, 3), stop_words)
 
@@ -74,8 +74,9 @@ def extract_keywords(doc, model):
 	top_n = 5
 	# similarities = cosine_similarity(doc_embedding, candidate_embeddings)
 	# keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
-	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, 30)
-	print(keywords[::-1])
+	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, 5, 20)
+
+	return keywords
 
 
 def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candidates):
