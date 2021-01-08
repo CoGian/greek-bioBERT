@@ -61,9 +61,9 @@ def produce_candidates(doc, n_gram_range, stop_words):
 
 
 def extract_keywords(doc, model):
-
-
 	stop_words = prepare_stopwords_list()
+	stop_words = [strip_accents_and_lowercase(word) for word in stop_words]
+
 	candidates = produce_candidates(doc, (3, 4), stop_words)
 
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
@@ -78,5 +78,6 @@ def extract_keywords(doc, model):
 if __name__ == '__main__':
 	nltk.download('stopwords')
 	model, tokenizer = load_model("greekBERT")
+
 	doc = input()
 	extract_keywords(doc, model)
