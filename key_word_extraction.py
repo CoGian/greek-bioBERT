@@ -1,10 +1,11 @@
 import json
 import unicodedata
-
+import numpy as np
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import BertTokenizer, TFBertModel
+import itertools
 
 
 def load_model(model_name):
@@ -71,9 +72,33 @@ def extract_keywords(doc, model):
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
 
 	top_n = 5
-	similarities = cosine_similarity(doc_embedding, candidate_embeddings)
-	keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
+	# similarities = cosine_similarity(doc_embedding, candidate_embeddings)
+	# keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
+	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, 30)
 	print(keywords[::-1])
+
+
+def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candidates):
+	# Calculate distances and extract keywords
+	distances = cosine_similarity(doc_embedding, candidate_embeddings)
+	distances_candidates = cosine_similarity(candidate_embeddings,
+	                                         candidate_embeddings)
+
+	# Get top_n words as candidates based on cosine similarity
+	words_idx = list(distances.argsort()[0][-nr_candidates:])
+	words_vals = [candidates[index] for index in words_idx]
+	distances_candidates = distances_candidates[np.ix_(words_idx, words_idx)]
+
+	# Calculate the combination of words that are the least similar to each other
+	min_sim = np.inf
+	candidate = None
+	for combination in itertools.combinations(range(len(words_idx)), top_n):
+		sim = sum([distances_candidates[i][j] for i in combination for j in combination if i != j])
+		if sim < min_sim:
+			candidate = combination
+			min_sim = sim
+
+	return [words_vals[idx] for idx in candidate]
 
 
 if __name__ == '__main__':
