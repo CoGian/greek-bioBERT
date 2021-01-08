@@ -60,12 +60,12 @@ def produce_candidates(doc, n_gram_range, stop_words):
 	return candidates
 
 
-def extract_keywords(doc):
-	nltk.download('stopwords')
+def extract_keywords(doc, model):
+
 
 	stop_words = prepare_stopwords_list()
 	candidates = produce_candidates(doc, (3, 4), stop_words)
-	model, tokenizer = load_model("greekBERT")
+
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
 
@@ -73,11 +73,10 @@ def extract_keywords(doc):
 	similarities = cosine_similarity(doc_embedding, candidate_embeddings)
 	keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
 	print(keywords[::-1])
-	print(similarities)
-	# print(similarities.argsort())
-	# print(candidates)
 
 
 if __name__ == '__main__':
-	doc = """η διαπίστωση της ύπαρξης γονιδιακών μεταλλάξεων, αλλά και αυξημένης έκφρασης συγκεκριμένων γονιδίων, κατέδειξε την ετερογένεια των περιπτώσεων της οξείας μυελογενούς λευχαιμίας (ομλ). ειδικότερα, κατά την τελευταία δεκαπενταετία έχει διαπιστωθεί η παρουσία μεταλλάξεων σε αρκετά γονίδια καθώς και αυξημένη έκφραση άλλων γονιδίων . οι μεταλλάξεις και η αυξημένη έκφραση των προαναφερθέντων γονιδίων κατά κύριο λόγο ανιχνεύονται σε ασθενείς με φυσιολογικού καρυοτύπου ομλ. η παρακολούθηση της ελάχιστης υπολειμματικής νόσου (ευν) μετά τη χημειοθεραπεία (χ/θ) εφόδου και ιδιαίτερα μετά τη χ/θ εδραίωσης είναι σημαντική για την αξιολόγηση του κινδύνου υποτροπής της νόσου στον κάθε ασθενή με ομλ ξεχωριστά. η επίμονη προσπάθεια πρώιμης ανίχνευσης της υποτροπής (ανοσοφαινοτυπικής ή μοριακής) στους ασθενείς με ομλ δικαιώνεται από τη δυνατότητα αποτελεσματικότερης αντιμετώπισής της σε σύγκριση με την αιματολογική υποτροπή. η δυνατότητα παρακολούθησης της ευν στην ομλ με τις μοριακές τεχνικές ενισχύθηκε σημαντικά τόσο από τη χρήση της real time quantitative polymerase chain reaction (rq-pcr), όσο και από την ταυτοποίηση ενός σημαντικού αριθμού γονιδίων-«στόχων», τα οποία αναφέρθηκαν προηγουμένως. από την ανασκόπηση των δεδομένων της βιβλιογραφίας προκύπτει το συμπέρασμα ότι η και το αποτελούν τα πλέον υποσχόμενα γονίδια-«στόχους» για την παρακολούθηση της ευν στην ομλ με την τεχνική της rq-pcr, πέρα από τα χιμαιρικά γονίδια."""
-	extract_keywords(doc)
+	nltk.download('stopwords')
+	model, tokenizer = load_model("greekBERT")
+	doc = input()
+	extract_keywords(doc, model)
