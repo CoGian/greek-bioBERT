@@ -78,6 +78,8 @@ def extract_keywords(doc, model):
 if __name__ == '__main__':
 	nltk.download('stopwords')
 	model, tokenizer = load_model("greekBERT")
-
-	doc = input()
-	extract_keywords(doc, model)
+	while True:
+		doc = input()
+		if doc == "end":
+			break
+		extract_keywords(doc, model)
