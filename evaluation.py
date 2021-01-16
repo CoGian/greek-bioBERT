@@ -56,9 +56,13 @@ def evaluate():
 				if broken:
 					break
 
-		print("gold: ", gold_keywords_prep)
+		num_relevant += rel
+		print("gold: ", gold_keywords)
 		print("pred: ", pred_keywords_prep)
 		print(rel)
+
+	print("Precision@k: ", num_relevant/num_predictions)
+	print("Recall@k: ", num_relevant/num_golds)
 
 
 
