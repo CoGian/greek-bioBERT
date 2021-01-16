@@ -44,14 +44,15 @@ def evaluate(k=5):
 		num_golds += len(gold_keywords_prep)
 
 		rel = 0
+		matched_gold_keywords = []
 		for pred_word in sorted(pred_keywords_prep):
 			broken = False
 			for gold_word in sorted(gold_keywords_prep):
 				for token in pred_word.split():
-					if token in gold_word:
+					if token in gold_word and gold_word not in matched_gold_keywords:
 						rel += 1
 						broken = True
-						gold_keywords_prep.remove(gold_word)
+						matched_gold_keywords.append(gold_word)
 						break
 				if broken:
 					break
@@ -64,8 +65,12 @@ def evaluate(k=5):
 	print(num_relevant)
 	print(num_predictions)
 	print(num_golds)
-	print("Precision@{:d}: {:.3f}".format(k, num_relevant / num_predictions))
-	print("Recall@{:d}: {:.3f}".format(k, num_relevant / num_golds))
+	precision_at_k = num_relevant / num_predictions
+	recall_at_k = num_relevant / num_golds
+	f1_at_k = (2 * precision_at_k * recall_at_k) / (precision_at_k + recall_at_k)
+	print("Precision@{:d}: {:.3f}".format(k, precision_at_k))
+	print("Recall@{:d}: {:.3f}".format(k, recall_at_k))
+	print("F1@{:d}: {:.3f}".format(k, f1_at_k))
 
 
 if __name__ == '__main__':
