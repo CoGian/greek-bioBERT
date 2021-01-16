@@ -12,7 +12,8 @@ import spacy
 def load_model(model_name):
 	"""
 	Loads the model and the tokenizer given the model name
-	:model_name: the bane of the file tha the model is
+	:param model_name: the bane of the file tha the model is
+	:return: model: huggingface model using TF, tokenizer
 	"""
 	model = TFBertModel.from_pretrained(model_name)
 	tokenizer = BertTokenizer.from_pretrained(model_name)
@@ -21,6 +22,9 @@ def load_model(model_name):
 
 
 def produce_doc_embeddings(model, tokenizer, text):
+	"""
+	Produces
+	"""
 	input_ids = tokenizer.encode(
 		text,
 		return_tensors="tf",

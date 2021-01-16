@@ -23,7 +23,7 @@ def evaluate(k=5):
 	for article in test_articles:
 		doc = article['title'] + " " + article["abstract"]
 		gold_keywords = article["keywords"]
-		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=5)
+		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=k)
 
 		gold_keywords_prep = []
 		for word in gold_keywords:
