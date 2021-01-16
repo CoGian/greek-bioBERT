@@ -21,11 +21,22 @@ def evaluate():
 		gold_keywords = article["keywords"]
 		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=5)
 
-		gold_keywords = [stemmer.stem(strip_accents_and_uppercase(word)) for word in gold_keywords]
-		pred_keywords = [stemmer.stem(strip_accents_and_uppercase(word)) for word in pred_keywords]
+		gold_keywords_prep = []
+		for word in gold_keywords:
+			_tmp = []
+			for token in strip_accents_and_uppercase(word).split():
+				_tmp.append(stemmer.stem(token))
+			gold_keywords_prep.append(" ".join(_tmp))
 
-		print("gold: ", gold_keywords)
-		print("pred: ", pred_keywords)
+		pred_keywords_prep = []
+		for word in pred_keywords:
+			_tmp = []
+			for token in strip_accents_and_uppercase(word).split():
+				_tmp.append(stemmer.stem(token))
+			pred_keywords_prep.append(" ".join(_tmp))
+
+		print("gold: ", gold_keywords_prep)
+		print("pred: ", pred_keywords_prep)
 
 		break
 
