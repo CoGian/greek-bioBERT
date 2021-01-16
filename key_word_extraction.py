@@ -123,6 +123,7 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 	distances_candidates = cosine_similarity(candidate_embeddings, candidate_embeddings)
 
 	# Get top_n words as candidates based on cosine similarity
+	print(distances)
 	words_idx = list(distances.argsort()[0][-nr_candidates:])
 	words_vals = [candidates[index] for index in words_idx]
 	distances_candidates = distances_candidates[np.ix_(words_idx, words_idx)]
