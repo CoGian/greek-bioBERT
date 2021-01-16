@@ -51,14 +51,13 @@ def evaluate():
 					if token in gold_word:
 						rel += 1
 						broken = True
-						break
 				if broken:
 					break
 
 		print("gold: ", gold_keywords_prep)
 		print("pred: ", pred_keywords_prep)
 		print(rel)
-		break
+
 
 
 if __name__ == '__main__':
