@@ -16,6 +16,10 @@ def evaluate():
 	pos_el = spacy.load("el_core_news_md")
 	model, tokenizer = load_model("greekBERT")
 	stemmer = GreekStemmer()
+	num_predictions = 0
+	num_golds = 0
+	num_relevant = 0
+
 	for article in test_articles:
 		doc = article['title'] + " " + article["abstract"]
 		gold_keywords = article["keywords"]
@@ -29,15 +33,31 @@ def evaluate():
 			gold_keywords_prep.append(" ".join(_tmp))
 
 		pred_keywords_prep = []
+
 		for word in pred_keywords:
 			_tmp = []
 			for token in strip_accents_and_uppercase(word).split():
 				_tmp.append(stemmer.stem(token))
 			pred_keywords_prep.append(" ".join(_tmp))
 
+		num_predictions += len(pred_keywords_prep)
+		num_golds += len(gold_keywords_prep)
+
+		rel = 0
+		for pred_word in pred_keywords_prep:
+			broken = False
+			for gold_word in gold_keywords_prep:
+				for token in pred_word.split():
+					if token in gold_word:
+						rel += 1
+						broken = True
+						break
+				if broken:
+					break
+
 		print("gold: ", gold_keywords_prep)
 		print("pred: ", pred_keywords_prep)
-
+		print(rel)
 		break
 
 
