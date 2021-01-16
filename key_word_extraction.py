@@ -135,6 +135,8 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 			candidate = combination
 			min_sim = sim
 
+	print(min_sim)
+	print(candidate)
 	return [words_vals[idx] for idx in candidate]
 
 
