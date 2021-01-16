@@ -106,7 +106,6 @@ def extract_keywords(doc, model, tokenizer, pos_model, top_n=5):
 
 	candidates = produce_candidates(doc, (1, 3), pos_model, stop_words)
 
-	print("\n", len(candidates))
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
 
@@ -128,7 +127,6 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 	words_vals = [candidates[index] for index in words_idx]
 	distances_candidates = distances_candidates[np.ix_(words_idx, words_idx)]
 
-	print(words_idx)
 	# Calculate the combination of words that are the least similar to each other
 	min_sim = np.inf
 	candidate = None
@@ -138,8 +136,6 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 			candidate = combination
 			min_sim = sim
 
-	print(min_sim)
-	print(candidate)
 	return [words_vals[idx] for idx in candidate]
 
 

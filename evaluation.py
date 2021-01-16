@@ -25,7 +25,6 @@ def evaluate(model_name, k=5):
 		gold_keywords = article["keywords"]
 		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=k)
 
-		print(pred_keywords)
 		gold_keywords_prep = []
 		for word in gold_keywords:
 			_tmp = []
