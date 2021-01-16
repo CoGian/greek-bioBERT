@@ -34,3 +34,4 @@ numpy==1.19.5
 tensorflow==2.4.0
 spacy==2.3.5
 pandas==1.2.0
+greek-stemmer==0.1.1

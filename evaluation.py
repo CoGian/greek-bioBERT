@@ -5,6 +5,7 @@ from key_word_extraction import extract_keywords, load_model, strip_accents_and_
 import spacy
 import nltk
 from Levenshtein import distance as levenshtein_distance
+from greek_stemmer import GreekStemmer
 
 
 def evaluate():
@@ -14,16 +15,18 @@ def evaluate():
 	nltk.download('stopwords')
 	pos_el = spacy.load("el_core_news_md")
 	model, tokenizer = load_model("greekBERT")
+	stemmer = GreekStemmer()
 	for article in test_articles:
 		doc = article['title'] + " " + article["abstract"]
 		gold_keywords = article["keywords"]
 		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=5)
 
-		gold_keywords = [strip_accents_and_uppercase(word) for word in gold_keywords]
-		pred_keywords = [strip_accents_and_uppercase(word) for word in pred_keywords]
+		gold_keywords = [stemmer.stem(strip_accents_and_uppercase(word)) for word in gold_keywords]
+		pred_keywords = [stemmer.stem(strip_accents_and_uppercase(word)) for word in pred_keywords]
 
 		print("gold: ", gold_keywords)
 		print("pred: ", pred_keywords)
+
 		break
 
 
