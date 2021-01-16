@@ -51,6 +51,7 @@ def evaluate():
 					if token in gold_word:
 						rel += 1
 						broken = True
+						break
 				if broken:
 					break
 
