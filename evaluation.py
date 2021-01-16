@@ -58,7 +58,7 @@ def evaluate(model_name, k=5):
 					break
 
 		num_relevant += rel
-		break
+
 	precision_at_k = num_relevant / num_predictions
 	recall_at_k = num_relevant / num_golds
 	f1_at_k = (2 * precision_at_k * recall_at_k) / (precision_at_k + recall_at_k)
