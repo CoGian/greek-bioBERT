@@ -44,9 +44,9 @@ def evaluate(k=5):
 		num_golds += len(gold_keywords_prep)
 
 		rel = 0
-		for pred_word in pred_keywords_prep:
+		for pred_word in sorted(pred_keywords_prep):
 			broken = False
-			for gold_word in gold_keywords_prep:
+			for gold_word in sorted(gold_keywords_prep):
 				for token in pred_word.split():
 					if token in gold_word:
 						rel += 1
