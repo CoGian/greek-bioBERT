@@ -63,8 +63,8 @@ def produce_candidates(doc, n_gram_range, pos_model, stop_words):
 		[
 			w.text for w in doc
 			if w.pos_ in pos
-			and w.text not in stop_words
-			and 2 < len(w.text) < 36])
+			   and w.text not in stop_words
+			   and 2 < len(w.text) < 36])
 
 	# Extract candidate words/phrases
 	count = CountVectorizer(ngram_range=n_gram_range).fit([doc])
