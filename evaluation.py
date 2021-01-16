@@ -8,13 +8,13 @@ from greek_stemmer import GreekStemmer
 import argparse
 from tqdm import tqdm
 
-def evaluate(k=5):
+def evaluate(model_name, k=5):
 	with open("preprocess/test_articles_dataset.json", "r") as testF:
 		test_articles = json.load(testF)
 
 	nltk.download('stopwords')
 	pos_el = spacy.load("el_core_news_md")
-	model, tokenizer = load_model("greekBERT")
+	model, tokenizer = load_model(model_name)
 	stemmer = GreekStemmer()
 	num_predictions = 0
 	num_golds = 0
@@ -70,12 +70,18 @@ def evaluate(k=5):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
+		"--model",
+		"-m",
+		help="model name/path",
+	)
+	parser.add_argument(
 		"--k",
 		"-k",
 		help="top k keywords",
 	)
 	args = parser.parse_args()
 
+	model_name = args.model
 	k = int(args.k)
 
-	evaluate(k)
+	evaluate(model_name, k)
