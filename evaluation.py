@@ -1,12 +1,13 @@
 import json
 from key_word_extraction import extract_keywords, load_model
 import spacy
-
+import nltk
 
 def evaluate():
 	with open("preprocess/test_articles_dataset.json", "r") as testF:
 		test_articles = json.load(testF)
 
+	nltk.download('stopwords')
 	pos_el = spacy.load("el_core_news_md")
 	model, tokenizer = load_model("greekBERT")
 	for article in test_articles:
