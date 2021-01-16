@@ -74,6 +74,6 @@ if __name__ == '__main__':
 	)
 	args = parser.parse_args()
 
-	k = args.k
+	k = int(args.k)
 
 	evaluate(k)

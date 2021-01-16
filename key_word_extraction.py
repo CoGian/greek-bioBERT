@@ -10,6 +10,10 @@ import spacy
 
 
 def load_model(model_name):
+	"""
+	Loads the model and the tokenizer given the model name
+	:model_name: the bane of the file tha the model is
+	"""
 	model = TFBertModel.from_pretrained(model_name)
 	tokenizer = BertTokenizer.from_pretrained(model_name)
 	# print(model.summary())
