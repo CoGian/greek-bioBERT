@@ -60,6 +60,9 @@ def produce_candidates_embeddings(model, tokenizer, candidates):
 
 
 def prepare_stopwords_list():
+	"""
+	Prepares stopwords list
+	"""
 	stop_words = nltk.corpus.stopwords.words('greek')
 	with open("stopwords-el.json", "r", encoding="utf-8") as fin:
 		stop_words2 = json.load(fin)
@@ -71,6 +74,11 @@ def prepare_stopwords_list():
 
 
 def strip_accents_and_uppercase(s):
+	"""
+	Strip accent and uppercase a string
+	:param s: a string
+	:return: the string without accent and uppercased
+	"""
 	return ''.join(
 		c for c in unicodedata.normalize('NFD', s)
 		if unicodedata.category(c) != 'Mn').upper()
