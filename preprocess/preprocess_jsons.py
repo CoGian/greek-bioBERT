@@ -62,8 +62,6 @@ def main():
     with open('articles_dataset.json', 'w', encoding='utf8') as fout:
         json.dump(articles_dataset, fout, ensure_ascii=False, indent=2)
 
-    random.seed(44)
-    random.shuffle(sentences_dataset)
     print('sentences_dataset size:', len(sentences_dataset))
     with open('sentences_dataset.json', 'w', encoding='utf8') as fout:
         json.dump(sentences_dataset, fout, ensure_ascii=False, indent=2)
