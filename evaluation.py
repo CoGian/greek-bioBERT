@@ -10,7 +10,7 @@ def evaluate():
 	pos_el = spacy.load("el_core_news_md")
 	model, tokenizer = load_model("greekBERT")
 	for article in test_articles:
-		doc = article['title'] + " " + article["abstracts"]
+		doc = article['title'] + " " + article["abstract"]
 		gold_keywords = article["keywords"]
 		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=5)
 		print(gold_keywords)
