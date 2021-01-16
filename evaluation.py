@@ -61,8 +61,8 @@ def evaluate(k=5):
 		print("pred: ", pred_keywords_prep)
 		print(rel)
 
-	print("Precision@{:d}: {:.2f}".format(k, num_relevant / num_predictions))
-	print("Recall@{:d}: {:.2f}".format(k, num_relevant / num_golds))
+	print("Precision@{:d}: {:.3f}".format(k, num_relevant / num_predictions))
+	print("Recall@{:d}: {:.3f}".format(k, num_relevant / num_golds))
 
 
 if __name__ == '__main__':
