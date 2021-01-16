@@ -14,8 +14,8 @@ def evaluate():
 		doc = article['title'] + " " + article["abstract"]
 		gold_keywords = article["keywords"]
 		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=5)
-		print(gold_keywords)
-		print(pred_keywords)
+		print("gold: ", gold_keywords)
+		print("pred: ", pred_keywords)
 
 
 if __name__ == '__main__':
