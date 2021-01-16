@@ -49,14 +49,13 @@ def prepare_stopwords_list():
 	return stop_words
 
 
-def strip_accents_and_lowercase(s):
+def strip_accents_and_uppercase(s):
 	return ''.join(
 		c for c in unicodedata.normalize('NFD', s)
-		if unicodedata.category(c) != 'Mn').lower()
+		if unicodedata.category(c) != 'Mn').upper()
 
 
 def produce_candidates(doc, n_gram_range, pos_model, stop_words):
-	# unaccented_doc = strip_accents_and_lowercase(doc)
 	pos = {'NOUN', 'ADJ'}
 	doc = pos_model(doc)
 	doc = " ".join(
@@ -75,8 +74,6 @@ def produce_candidates(doc, n_gram_range, pos_model, stop_words):
 
 def extract_keywords(doc, model, tokenizer, pos_model, top_n=5):
 	stop_words = prepare_stopwords_list()
-	# stop_words = [strip_accents_and_lowercase(word) for word in stop_words]
-	# doc = strip_accents_and_lowercase(doc)
 
 	candidates = produce_candidates(doc, (1, 3), pos_model, stop_words)
 
