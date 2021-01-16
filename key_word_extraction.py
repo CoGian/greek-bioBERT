@@ -36,6 +36,7 @@ def produce_doc_embeddings(model, tokenizer, text):
 		max_length=512,
 		truncation=True)
 	doc_embedding = model(input_ids)[1].numpy()
+	print(doc_embedding.shape)
 	return doc_embedding
 
 
@@ -44,8 +45,8 @@ def produce_candidates_embeddings(model, tokenizer, candidates):
 	Produces embeddings for candidates in a batch.
 	:param model: huggingface model
 	:param tokenizer: huggingface tokenizer
-	:param candidates: the that the embeddings are produced
-	:return: doc_embeddings: a tf tensor with shape (1,512)
+	:param candidates: a list of candidates that the embeddings are produced
+	:return: doc_embeddings: a tf tensor with shape (len(candidates),32)
 	"""
 	input_ids = tokenizer.batch_encode_plus(
 		candidates,
@@ -54,6 +55,7 @@ def produce_candidates_embeddings(model, tokenizer, candidates):
 		max_length=32,
 		truncation=True)["input_ids"]
 	candidates_embeddings = model(input_ids)[1].numpy()
+	print(candidates_embeddings.shape)
 	return candidates_embeddings
 
 
