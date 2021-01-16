@@ -6,6 +6,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import BertTokenizer, TFBertModel
 import itertools
+import spacy
 
 
 def load_model(model_name):
@@ -16,21 +17,23 @@ def load_model(model_name):
 
 
 def produce_doc_embeddings(model, tokenizer, text):
-	input_ids = tokenizer.encode(text,
-	                             return_tensors="tf",
-	                             padding="max_length",
-	                             max_length=512,
-	                             truncation=True)
+	input_ids = tokenizer.encode(
+		text,
+		return_tensors="tf",
+		padding="max_length",
+		max_length=512,
+		truncation=True)
 	doc_embedding = model(input_ids)[1].numpy()
 	return doc_embedding
 
 
 def produce_candidates_embeddings(model, tokenizer, candidates):
-	input_ids = tokenizer.batch_encode_plus(candidates,
-	                                        return_tensors="tf",
-	                                        padding="max_length",
-	                                        max_length=32,
-	                                        truncation=True)["input_ids"]
+	input_ids = tokenizer.batch_encode_plus(
+		candidates,
+		return_tensors="tf",
+		padding="max_length",
+		max_length=32,
+		truncation=True)["input_ids"]
 	candidates_embeddings = model(input_ids)[1].numpy()
 	return candidates_embeddings
 
@@ -47,34 +50,42 @@ def prepare_stopwords_list():
 
 
 def strip_accents_and_lowercase(s):
-	return ''.join(c for c in unicodedata.normalize('NFD', s)
-	               if unicodedata.category(c) != 'Mn').lower()
+	return ''.join(
+		c for c in unicodedata.normalize('NFD', s)
+		if unicodedata.category(c) != 'Mn').lower()
 
 
-def produce_candidates(doc, n_gram_range, stop_words):
+def produce_candidates(doc, n_gram_range, pos_model, stop_words):
 	# unaccented_doc = strip_accents_and_lowercase(doc)
+	pos = {'NOUN', 'ADJ'}
+	doc = pos_model(doc)
+	doc = " ".join(
+		[
+			w.text for w in doc
+			if w.pos_ in pos
+			and w.text not in stop_words
+			and 2 < len(w.text) < 36])
 
 	# Extract candidate words/phrases
-	count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([doc])
+	count = CountVectorizer(ngram_range=n_gram_range).fit([doc])
 	candidates = count.get_feature_names()
 
 	return candidates
 
 
-def extract_keywords(doc, model):
+def extract_keywords(doc, model, tokenizer, pos_model, top_n=5):
 	stop_words = prepare_stopwords_list()
 	# stop_words = [strip_accents_and_lowercase(word) for word in stop_words]
 	# doc = strip_accents_and_lowercase(doc)
 
-	candidates = produce_candidates(doc, (1, 3), stop_words)
+	candidates = produce_candidates(doc, (1, 3), pos_model, stop_words)
 
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
 
-	top_n = 5
 	# similarities = cosine_similarity(doc_embedding, candidate_embeddings)
 	# keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
-	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, 5, 20)
+	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, 20)
 
 	return keywords
 
@@ -82,8 +93,7 @@ def extract_keywords(doc, model):
 def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candidates):
 	# Calculate distances and extract keywords
 	distances = cosine_similarity(doc_embedding, candidate_embeddings)
-	distances_candidates = cosine_similarity(candidate_embeddings,
-	                                         candidate_embeddings)
+	distances_candidates = cosine_similarity(candidate_embeddings, candidate_embeddings)
 
 	# Get top_n words as candidates based on cosine similarity
 	words_idx = list(distances.argsort()[0][-nr_candidates:])
@@ -103,10 +113,12 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 
 
 if __name__ == '__main__':
-	nltk.download('stopwords')
-	model, tokenizer = load_model("greekBERT")
+	# nltk.download('stopwords')
+	pos_el = spacy.load("el_core_news_md")
+	input_model, input_tokenizer = load_model("greekBERT")
+
 	while True:
-		doc = input()
-		if doc == "end":
+		input_doc = input()
+		if input_doc == "end":
 			break
-		extract_keywords(doc, model)
+		extract_keywords(input_doc, input_model, input_tokenizer, pos_el)
