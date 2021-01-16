@@ -105,14 +105,16 @@ def extract_keywords(doc, model, tokenizer, pos_model, top_n=5):
 	stop_words = prepare_stopwords_list()
 
 	candidates = produce_candidates(doc, (1, 3), pos_model, stop_words)
+	print("candidates ", candidates)
 
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
+	print("doc_embedding ", doc_embedding)
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
-
+	print("candidate_embeddings ", candidate_embeddings)
 	# similarities = cosine_similarity(doc_embedding, candidate_embeddings)
 	# keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
 	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, 20)
-
+	print("keywords ", keywords)
 	return keywords
 
 
