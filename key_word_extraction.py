@@ -23,7 +23,11 @@ def load_model(model_name):
 
 def produce_doc_embeddings(model, tokenizer, text):
 	"""
-	Produces
+	Produces embeddings for a doc.
+	:param model: huggingface model
+	:param tokenizer: huggingface tokenizer
+	:param text: the that the embeddings are produced
+	:return: doc_embeddings: a tf tensor with shape (1,512)
 	"""
 	input_ids = tokenizer.encode(
 		text,
@@ -36,6 +40,13 @@ def produce_doc_embeddings(model, tokenizer, text):
 
 
 def produce_candidates_embeddings(model, tokenizer, candidates):
+	"""
+	Produces embeddings for candidates in a batch.
+	:param model: huggingface model
+	:param tokenizer: huggingface tokenizer
+	:param candidates: the that the embeddings are produced
+	:return: doc_embeddings: a tf tensor with shape (1,512)
+	"""
 	input_ids = tokenizer.batch_encode_plus(
 		candidates,
 		return_tensors="tf",
