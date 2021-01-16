@@ -6,7 +6,7 @@ import spacy
 import nltk
 from greek_stemmer import GreekStemmer
 import argparse
-
+from tqdm import tqdm
 
 def evaluate(k=5):
 	with open("preprocess/test_articles_dataset.json", "r") as testF:
@@ -20,7 +20,7 @@ def evaluate(k=5):
 	num_golds = 0
 	num_relevant = 0
 
-	for article in test_articles:
+	for article in tqdm(test_articles):
 		doc = article['title'] + " " + article["abstract"]
 		gold_keywords = article["keywords"]
 		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=k)
@@ -58,13 +58,7 @@ def evaluate(k=5):
 					break
 
 		num_relevant += rel
-		print("gold: ", gold_keywords)
-		print("pred: ", pred_keywords_prep)
-		print(rel)
 
-	print(num_relevant)
-	print(num_predictions)
-	print(num_golds)
 	precision_at_k = num_relevant / num_predictions
 	recall_at_k = num_relevant / num_golds
 	f1_at_k = (2 * precision_at_k * recall_at_k) / (precision_at_k + recall_at_k)
