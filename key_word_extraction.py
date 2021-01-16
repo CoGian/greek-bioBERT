@@ -131,6 +131,7 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 	min_sim = np.inf
 	candidate = None
 	for combination in itertools.combinations(range(len(words_idx)), top_n):
+		print(combination)
 		sim = sum([distances_candidates[i][j] for i in combination for j in combination if i != j])
 		if sim < min_sim:
 			candidate = combination
