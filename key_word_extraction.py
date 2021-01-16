@@ -106,6 +106,7 @@ def extract_keywords(doc, model, tokenizer, pos_model, top_n=5):
 
 	candidates = produce_candidates(doc, (1, 3), pos_model, stop_words)
 
+	print("\n", len(candidates))
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
 
