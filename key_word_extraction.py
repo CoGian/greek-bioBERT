@@ -121,4 +121,5 @@ if __name__ == '__main__':
 		input_doc = input()
 		if input_doc == "end":
 			break
-		extract_keywords(input_doc, input_model, input_tokenizer, pos_el)
+		output = extract_keywords(input_doc, input_model, input_tokenizer, pos_el)
+		print(output)
