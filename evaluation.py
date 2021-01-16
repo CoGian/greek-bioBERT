@@ -1,8 +1,9 @@
+from __future__ import print_function
+
 import json
 from key_word_extraction import extract_keywords, load_model, strip_accents_and_uppercase
 import spacy
 import nltk
-from __future__ import print_function
 from Levenshtein import distance as levenshtein_distance
 
 
