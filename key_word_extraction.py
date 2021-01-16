@@ -113,7 +113,7 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 
 
 if __name__ == '__main__':
-	# nltk.download('stopwords')
+	nltk.download('stopwords')
 	pos_el = spacy.load("el_core_news_md")
 	input_model, input_tokenizer = load_model("greekBERT")
 
