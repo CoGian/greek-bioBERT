@@ -4,11 +4,11 @@ import json
 from key_word_extraction import extract_keywords, load_model, strip_accents_and_uppercase
 import spacy
 import nltk
-from Levenshtein import distance as levenshtein_distance
 from greek_stemmer import GreekStemmer
+import argparse
 
 
-def evaluate():
+def evaluate(k=5):
 	with open("preprocess/test_articles_dataset.json", "r") as testF:
 		test_articles = json.load(testF)
 
@@ -61,10 +61,19 @@ def evaluate():
 		print("pred: ", pred_keywords_prep)
 		print(rel)
 
-	print("Precision@k: ", num_relevant/num_predictions)
-	print("Recall@k: ", num_relevant/num_golds)
-
+	print("Precision@{:d}: {:.2f}".format(k, num_relevant / num_predictions))
+	print("Recall@{:d}: {:.2f}".format(k, num_relevant / num_golds))
 
 
 if __name__ == '__main__':
-	evaluate()
+	parser = argparse.ArgumentParser()
+	parser.add_argument(
+		"--k",
+		"-k",
+		help="top k keywords",
+	)
+	args = parser.parse_args()
+
+	k = args.k
+
+	evaluate(k)
