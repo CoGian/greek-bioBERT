@@ -21,10 +21,6 @@ def process_text(text):
 def main():
     articles = []
 
-    with open("iatrolexi_abstracts_with_keywords.json", 'r', encoding="utf-8") as fin:
-        data = json.load(fin)
-    articles.extend(data)
-
     with open("../bioscrape/mendet.json", 'r', encoding="utf-8") as fin:
         data = json.load(fin)
     articles.extend(data)
@@ -44,6 +40,10 @@ def main():
     test_articles = articles[:150]
     articles = articles[150:]
 
+    with open("iatrolexi_abstracts_with_keywords.json", 'r', encoding="utf-8") as fin:
+        data = json.load(fin)
+    articles.extend(data)
+
     for article in articles:
         abstract = process_text(article['abstract'])
         keywords = process_text(article['keywords'])
@@ -62,11 +62,14 @@ def main():
     with open('articles_dataset.json', 'w', encoding='utf8') as fout:
         json.dump(articles_dataset, fout, ensure_ascii=False, indent=2)
 
+    random.seed(44)
+    random.shuffle(sentences_dataset)
     print('sentences_dataset size:', len(sentences_dataset))
     with open('sentences_dataset.json', 'w', encoding='utf8') as fout:
         json.dump(sentences_dataset, fout, ensure_ascii=False, indent=2)
 
     for article in test_articles:
+        title = process_text(article['title'])
         abstract = process_text(article['abstract'])
         keywords = process_text(article['keywords'])
 
@@ -78,6 +81,7 @@ def main():
 
         if 30 > len(keywords) >= 1:
             test_articles_dataset.append({
+                "title": title,
                 "abstract": abstract,
                 "keywords": keywords
             })
