@@ -1,21 +1,28 @@
 from __future__ import print_function
 
 import json
-from key_word_extraction import extract_keywords, load_model, strip_accents_and_uppercase
+from key_word_extraction import extract_keywords, load_model, strip_accents_and_uppercase, extract_keywords_RAKE, extract_keywords_YAKE
 import spacy
 import nltk
 from greek_stemmer import GreekStemmer
 import argparse
 from tqdm import tqdm
+from multi_rake import Rake
+import yake
 
 
 def evaluate(model_name, k=5):
 	with open("preprocess/test_articles_dataset.json", "r") as testF:
 		test_articles = json.load(testF)
 
-	nltk.download('stopwords')
-	pos_el = spacy.load("el_core_news_md")
-	model, tokenizer = load_model(model_name)
+	if model_name == "rake":
+		model = Rake(language_code="el")
+	elif model_name == "yake":
+		model = yake.KeywordExtractor(lan="el", top=k)
+	else:
+		nltk.download('stopwords')
+		pos_el = spacy.load("el_core_news_md")
+		model, tokenizer = load_model(model_name)
 	stemmer = GreekStemmer()
 	num_predictions = 0
 	num_golds = 0
@@ -24,7 +31,13 @@ def evaluate(model_name, k=5):
 	for article in tqdm(test_articles):
 		doc = article['title'] + " " + article["abstract"]
 		gold_keywords = article["keywords"]
-		pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=k)
+
+		if model_name == "rake":
+			pred_keywords = extract_keywords_RAKE(model, doc, top_n=k)
+		elif model_name == "yake":
+			pred_keywords = extract_keywords_YAKE(model, doc)
+		else:
+			pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=k)
 
 		gold_keywords_prep = []
 		for word in gold_keywords:

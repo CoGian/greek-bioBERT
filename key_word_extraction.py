@@ -152,9 +152,9 @@ def test_extraction_with_embeddings():
 		print(output)
 
 
-def extract_keywords_RAKE(rake, text):
+def extract_keywords_RAKE(rake, text, top_n=5):
 	keywords = rake.apply(text)
-	return keywords
+	return [word[0] for word in keywords][:top_n]
 
 
 def test_extraction_with_RAKE():
@@ -169,7 +169,7 @@ def test_extraction_with_RAKE():
 
 def extract_keywords_YAKE(yake_extractor, text):
 	keywords = yake_extractor.extract_keywords(text)
-	return keywords
+	return [word[1] for word in keywords]
 
 
 def test_extraction_with_YAKE():
@@ -183,4 +183,4 @@ def test_extraction_with_YAKE():
 
 
 if __name__ == '__main__':
-	test_extraction_with_RAKE()
+	test_extraction_with_YAKE()
