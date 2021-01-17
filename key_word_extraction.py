@@ -158,8 +158,7 @@ def extract_keywords_RAKE(rake, text):
 
 
 def test_extraction_with_RAKE():
-	stopwords = prepare_stopwords_list()
-	rake = Rake(language_code="el", stopwords=stopwords)
+	rake = Rake(language_code="el")
 	while True:
 		input_doc = input()
 		if input_doc == "end":
