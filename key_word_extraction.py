@@ -7,6 +7,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from transformers import BertTokenizer, TFBertModel
 import itertools
 import spacy
+from multi_rake import Rake
+import yake
 
 
 def load_model(model_name):
@@ -138,14 +140,48 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 	return [words_vals[idx] for idx in candidate]
 
 
-if __name__ == '__main__':
+def test_extraction_with_embeddings():
 	nltk.download('stopwords')
 	pos_el = spacy.load("el_core_news_md")
 	input_model, input_tokenizer = load_model("greekBERT")
-
 	while True:
 		input_doc = input()
 		if input_doc == "end":
 			break
 		output = extract_keywords(input_doc, input_model, input_tokenizer, pos_el)
 		print(output)
+
+
+def extract_keywords_RAKE(rake, text):
+	keywords = rake.apply(text)
+	return keywords
+
+
+def test_extraction_with_RAKE():
+	stopwords = prepare_stopwords_list()
+	rake = Rake(language_code="el", stopwords=stopwords)
+	while True:
+		input_doc = input()
+		if input_doc == "end":
+			break
+		output = extract_keywords_RAKE(rake, input_doc)
+		print(output)
+
+
+def extract_keywords_YAKE(yake_extractor, text):
+	keywords = yake_extractor.extract_keywords(text)
+	return keywords
+
+
+def test_extraction_with_YAKE():
+	yake_extractor = yake.KeywordExtractor(lan="el", top=5)
+	while True:
+		input_doc = input()
+		if input_doc == "end":
+			break
+		output = extract_keywords_YAKE(yake_extractor, input_doc)
+		print(output)
+
+
+if __name__ == '__main__':
+	test_extraction_with_RAKE()
