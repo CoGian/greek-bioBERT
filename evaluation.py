@@ -8,6 +8,7 @@ from greek_stemmer import GreekStemmer
 import argparse
 from tqdm import tqdm
 
+
 def evaluate(model_name, k=5):
 	with open("preprocess/test_articles_dataset.json", "r") as testF:
 		test_articles = json.load(testF)
