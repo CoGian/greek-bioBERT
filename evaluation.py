@@ -42,7 +42,7 @@ def evaluate(model_name, k=5):
 		elif model_name == "yake":
 			pred_keywords = extract_keywords_YAKE(model, doc)
 		elif model_name == "textrank":
-			pred_keywords = extract_keywords_TEXTRANK(pos_el, doc, top_n=10)
+			pred_keywords = extract_keywords_TEXTRANK(pos_el, doc, top_n=k)
 		else:
 			pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=k)
 
