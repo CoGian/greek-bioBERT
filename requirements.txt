@@ -33,7 +33,7 @@ transformers==3.5.1
 numpy==1.19.5
 tensorflow==2.4.0
 spacy==2.3.5
-pandas==1.2.0
+pandas==1.2.1
 greek-stemmer==0.1.1
 tqdm==4.56.0
 gensim==3.8.3
