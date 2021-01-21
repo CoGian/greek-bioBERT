@@ -9,6 +9,7 @@ import itertools
 import spacy
 from multi_rake import Rake
 import yake
+import pytextrank
 
 
 def load_model(model_name):
@@ -182,5 +183,25 @@ def test_extraction_with_YAKE():
 		print(output)
 
 
+def extract_keywords_TEXTRANK(model, doc, top_n=5):
+	doc = model(doc)
+
+	return [p.text for p in doc._.phrases if 1 <= len(p.text.split()) <= 3][:top_n]
+
+
+def test_extraction_with_TEXTRANK():
+	tr = pytextrank.TextRank()
+	pos_el = spacy.load("el_core_news_md")
+
+	pos_el.add_pipe(tr.PipelineComponent, name="textrank", last=True)
+
+	while True:
+		input_doc = input()
+		if input_doc == "end":
+			break
+		output = extract_keywords_TEXTRANK(pos_el, input_doc, 5)
+		print(output)
+
+
 if __name__ == '__main__':
-	test_extraction_with_YAKE()
+	test_extraction_with_TEXTRANK()

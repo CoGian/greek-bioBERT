@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 import json
-from key_word_extraction import extract_keywords, load_model, strip_accents_and_uppercase, extract_keywords_RAKE, extract_keywords_YAKE
+from key_word_extraction import extract_keywords, load_model, strip_accents_and_uppercase, extract_keywords_RAKE, extract_keywords_YAKE, extract_keywords_TEXTRANK
 import spacy
 import nltk
 from greek_stemmer import GreekStemmer
@@ -9,6 +9,7 @@ import argparse
 from tqdm import tqdm
 from multi_rake import Rake
 import yake
+import pytextrank
 
 
 def evaluate(model_name, k=5):
@@ -19,6 +20,10 @@ def evaluate(model_name, k=5):
 		model = Rake(language_code="el")
 	elif model_name == "yake":
 		model = yake.KeywordExtractor(lan="el", top=k)
+	elif model_name == "textrank":
+		pos_el = spacy.load("el_core_news_md")
+		tr = pytextrank.TextRank()
+		pos_el.add_pipe(tr.PipelineComponent, name="textrank", last=True)
 	else:
 		nltk.download('stopwords')
 		pos_el = spacy.load("el_core_news_md")
@@ -36,6 +41,8 @@ def evaluate(model_name, k=5):
 			pred_keywords = extract_keywords_RAKE(model, doc, top_n=k)
 		elif model_name == "yake":
 			pred_keywords = extract_keywords_YAKE(model, doc)
+		elif model_name == "textrank":
+			pred_keywords = extract_keywords_TEXTRANK(pos_el, doc, top_n=10)
 		else:
 			pred_keywords = extract_keywords(doc, model, tokenizer, pos_el, top_n=k)
 
