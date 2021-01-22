@@ -39,7 +39,7 @@ def produce_doc_embeddings(model, tokenizer, text):
 		max_length=512,
 		truncation=True)
 	doc_embedding = model(input_ids)[0]
-	doc_embedding = tf.reduce_mean(doc_embedding, axis=[1, 2]).numpy()
+	doc_embedding = tf.reduce_mean(doc_embedding, axis=[1]).numpy()
 	# print(doc_embedding.shape)
 	return doc_embedding
 
@@ -59,7 +59,7 @@ def produce_candidates_embeddings(model, tokenizer, candidates):
 		max_length=32,
 		truncation=True)["input_ids"]
 	candidates_embeddings = model(input_ids)[0]
-	candidates_embeddings = tf.reduce_mean(candidates_embeddings, axis=[1, 2]).numpy()
+	candidates_embeddings = tf.reduce_mean(candidates_embeddings, axis=[1]).numpy()
 	# print(candidates_embeddings.shape)
 	return candidates_embeddings
 
@@ -114,8 +114,6 @@ def extract_keywords(doc, model, tokenizer, pos_model, top_n=5):
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
 
-	print(doc_embedding.shape)
-	print(candidate_embeddings.shape)
 	# similarities = cosine_similarity(doc_embedding, candidate_embeddings)
 	# keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
 	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, 20)
