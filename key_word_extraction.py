@@ -148,7 +148,7 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 def test_extraction_with_embeddings():
 	nltk.download('stopwords')
 	pos_el = spacy.load("el_core_news_md")
-	input_model, input_tokenizer = load_model("greekBERT")
+	input_model, input_tokenizer = load_model("greekBERT_v2")
 	while True:
 		input_doc = input()
 		if input_doc == "end":
