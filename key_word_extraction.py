@@ -112,6 +112,8 @@ def extract_keywords(doc, model, tokenizer, pos_model, top_n=5):
 	doc_embedding = produce_doc_embeddings(model, tokenizer, doc)
 	candidate_embeddings = produce_candidates_embeddings(model, tokenizer, candidates)
 
+	print(doc_embedding.shape)
+	print(candidate_embeddings.shape)
 	# similarities = cosine_similarity(doc_embedding, candidate_embeddings)
 	# keywords = [candidates[index] for index in similarities.argsort()[0][-top_n:]]
 	keywords = max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, 20)
@@ -204,4 +206,4 @@ def test_extraction_with_TEXTRANK():
 
 
 if __name__ == '__main__':
-	test_extraction_with_TEXTRANK()
+	test_extraction_with_embeddings()
