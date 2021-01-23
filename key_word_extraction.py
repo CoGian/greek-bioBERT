@@ -10,7 +10,7 @@ import spacy
 from multi_rake import Rake
 import yake
 import pytextrank
-
+import tensorflow as tf
 
 def load_model(model_name):
 	"""
@@ -38,7 +38,8 @@ def produce_doc_embeddings(model, tokenizer, text):
 		padding="max_length",
 		max_length=512,
 		truncation=True)
-	doc_embedding = model(input_ids)[1].numpy()
+	doc_embedding = model(input_ids)[0]
+	doc_embedding = tf.reduce_mean(doc_embedding, axis=[1]).numpy()
 	# print(doc_embedding.shape)
 	return doc_embedding
 
@@ -57,7 +58,8 @@ def produce_candidates_embeddings(model, tokenizer, candidates):
 		padding="max_length",
 		max_length=32,
 		truncation=True)["input_ids"]
-	candidates_embeddings = model(input_ids)[1].numpy()
+	candidates_embeddings = model(input_ids)[0]
+	candidates_embeddings = tf.reduce_mean(candidates_embeddings, axis=[1]).numpy()
 	# print(candidates_embeddings.shape)
 	return candidates_embeddings
 
@@ -144,7 +146,7 @@ def max_sum_sim(doc_embedding, candidate_embeddings, candidates, top_n, nr_candi
 def test_extraction_with_embeddings():
 	nltk.download('stopwords')
 	pos_el = spacy.load("el_core_news_md")
-	input_model, input_tokenizer = load_model("greekBERT")
+	input_model, input_tokenizer = load_model("greekBERT_v2")
 	while True:
 		input_doc = input()
 		if input_doc == "end":
@@ -204,4 +206,4 @@ def test_extraction_with_TEXTRANK():
 
 
 if __name__ == '__main__':
-	test_extraction_with_TEXTRANK()
+	test_extraction_with_embeddings()
