@@ -1,4 +1,4 @@
-# greek-bioBERT
+# keyword-extraction-with-greekBERT
 
 
 ## Scraping biomedical sites
@@ -10,5 +10,8 @@ To scrape biomedical sites
 
 e.g. for mednet: 
 `scrapy crawl mednet -o mednet.json`
+
+## Extraction 
+Useful info can be found at keyword_extraction.ipynb
     
      
